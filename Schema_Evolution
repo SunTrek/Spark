@@ -1,0 +1,36 @@
+https://kontext.tech/article/381/schema-merging-evolution-with-parquet-in-spark-and-hive
+
+from pyspark import SparkConf
+from pyspark.sql import SparkSession
+
+appName = "Python Example - Parquet Schema Merge"
+master = 'local'
+
+# Create Spark session
+conf = SparkConf().setMaster(master)
+spark = SparkSession.builder.config(conf=conf).getOrCreate()
+
+data1 = [{"id": 1, "attr0": "Attr 0"}, {"id": 2, "attr0": "Attr 0"}]
+df1 = spark.createDataFrame(data1)
+
+data2 = [{"id": 1, "attr0": "Attr 0", "attr1": "Attr 1"}, {"id": 2, "attr0": "Attr 0", "attr1": "Attr 1"}]
+df2 = spark.createDataFrame(data2)
+
+data3= [{"id": 1, "attr1": "Attr 1"}, {"id": 2, "attr1": "Attr 1"}]
+df3 = spark.createDataFrame(data3)
+
+df1.write.mode('overwrite').parquet('data/partition-date=2020-01-01')
+df2.write.mode('overwrite').parquet('data/partition-date=2020-01-02')
+df3.write.mode('overwrite').parquet('data/partition-date=2020-01-03')
+
+
+df = spark.read.option("mergeSchema","true").parquet("data")
+df.show()
+
+
+##Use Spark SQL
+  Alternatively, we can also use Spark SQL option to enable schema merge.
+
+    spark.conf.set("spark.sql.parquet.mergeSchema", "true")
+    df = spark.read.parquet("data")
+    df.show()
