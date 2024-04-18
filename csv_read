@@ -1,0 +1,8 @@
+read_df = spark.read.format('csv')\
+    .option("header","false")\
+        .option("inferSchema","false") \
+            .option("mode","FAILFAST") \
+                .load("/FileStore/tables/2010_summary.csv")
+
+
+read_df.show(5)
