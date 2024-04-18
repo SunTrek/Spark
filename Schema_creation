@@ -1,0 +1,20 @@
+from pyspark.sql.types import StructField, StructType, StringType, IntegerType
+
+my_schema = StructType([
+    StructField("DEST_COUNTRY_NAME", StringType(), True),
+    StructField("ORIGIN_COUNTRY_NAME", StringType(), True),
+    StructField("Count", IntegerType(), True),
+
+])
+
+
+read_df = spark.read.format('csv')\
+    .option("header","false")\
+        .option("inferSchema","false") \
+            .schema(my_schema)\
+                .option("skipRows",1)\
+            .option("mode","permissive") \
+                .load("/FileStore/tables/2010_summary.csv")
+
+
+read_df.show(5)
