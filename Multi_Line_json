@@ -1,0 +1,99 @@
+## Multi Line Json Reader
+
+json_reader_df = spark.read.format('json')\
+    .option("header","true")\
+        .option("inferSchema","true") \
+                .option("mode","permissive")\
+                    .option("multiline","true")\
+                .load("/FileStore/tables/multi_line_data.json")
+
+
+json_reader_df.show()
+
+Input:
+[
+{
+  "name": "Manish",
+  "age": 20,
+  "salary": 20000
+},
+{
+  "name": "Nikita",
+  "age": 25,
+  "salary": 21000
+},
+{
+  "name": "Pritam",
+  "age": 16,
+  "salary": 22000
+},
+{
+  "name": "Prantosh",
+  "age": 35,
+  "salary": 25000
+},
+{
+  "name": "Vikash",
+  "age": 67,
+  "salary": 40000
+}
+]
+
+--> Output
++---+--------+------+
+|age|    name|salary|
++---+--------+------+
+| 20|  Manish| 20000|
+| 25|  Nikita| 21000|
+| 16|  Pritam| 22000|
+| 35|Prantosh| 25000|
+| 67|  Vikash| 40000|
++---+--------+------+
+
+
+## Multi Line Corrupted Record Reader
+json_reader_df = spark.read.format('json')\
+    .option("header","true")\
+        .option("inferSchema","true") \
+                .option("mode","permissive")\
+                    .option("multiline","true")\
+                .load("/FileStore/tables/multi_line_incorrect.json")
+
+
+json_reader_df.show()
+
+Input:
+{
+  "name": "Manish",
+  "age": 20,
+  "salary": 20000
+},
+{
+  "name": "Nikita",
+  "age": 25,
+  "salary": 21000
+},
+{
+  "name": "Pritam",
+  "age": 16,
+  "salary": 22000
+},
+{
+  "name": "Prantosh",
+  "age": 35,
+  "salary": 25000
+},
+{
+  "name": "Vikash",
+  "age": 67,
+  "salary": 40000
+}
+
+
+--> Output:
++---+------+------+
+|age|  name|salary|
++---+------+------+
+| 20|Manish| 20000|
++---+------+------+
+
