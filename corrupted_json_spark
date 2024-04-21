@@ -1,0 +1,22 @@
+## Line Delimited Corrupted Record
+json_reader_df = spark.read.format('json')\
+    .option("header","true")\
+        .option("inferSchema","true") \
+                .option("mode","permissive")\
+                .load("/FileStore/tables/one_liner_json_corrupted_data.json")
+
+
+json_reader_df.show()
+
+  ## Output
+  +--------------------+----+--------+------+
+|     _corrupt_record| age|    name|salary|
++--------------------+----+--------+------+
+|                null|  20|  Manish| 20000|
+|                null|  25|  Nikita| 21000|
+|                null|  16|  Pritam| 22000|
+|                null|  35|Prantosh| 25000|
+|{"name":"Vikash",...|null|    null|  null|
++--------------------+----+--------+------+
+
+  
