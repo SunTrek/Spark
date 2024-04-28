@@ -1,0 +1,27 @@
+####Parquet File Reader:
+
+pd_df = spark.read.parquet('/FileStore/tables/Parquet_file_flight_data.parquet')
+
+pd_df.show(300)
+
+
+->2 === Parquet Reader
+
+pq_reader_df = spark.read.format('parquet')\
+    .option("header","true")\
+        .option("inferSchema","true") \
+                .option("mode","permissive")\
+                    .option("multiline","true")\
+                .load("/FileStore/tables/Parquet_file_flight_data.parquet")
+
+
+pq_reader_df.show()
+
+
+== Writer API
+
+pq_reader_df.write.format("csv")\
+    .option("header","true") \
+        .option("mode","overwritten")\
+            .option("path","/FileStore/tables/csd_writer/")\
+                .save()
