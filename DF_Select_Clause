@@ -67,6 +67,14 @@ df.select(expr('id+5 as new_id')).show()
 +------+
 
 
+== SparkSQL
+To Create Temp View
+df.createOrReplaceTempView("employe_table")
+
+spark.sql("""
+          select * from employe_table
+          """).show()
+
 
 
 
