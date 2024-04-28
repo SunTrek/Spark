@@ -1,0 +1,58 @@
+https://community.cloud.databricks.com/?o=301283604803956#notebook/3658175446967095/command/1895391940291246
+
+
+==
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
+
+
+df = spark.read.format('csv')\
+    .option("header","true")\
+        .option("inferSchema","true") \
+            .option("mode","permissive") \
+                .load("/FileStore/tables/employeed.csv")
+
+
+df.show()
+df.printSchema
+
+df.createOrReplaceTempView("employee_table")
+
+
+==
+df.select(col('id').alias('employee_id'),'name','age').show()
+
++-----------+--------+---+
+|employee_id|    name|age|
++-----------+--------+---+
+|          1|  Manish| 26|
+|          2|  Nikita| 23|
+|          3|  Pritam| 22|
+|          4|Prantosh| 17|
+|          5|  Vikash| 31|
+
+
+==
+Filter Condition
+df.filter((col('salary')>150000) & (col('age')>18)).show()
+
++---+------+---+------+-------+--------+
+| id|  name|age|salary|address| nominee|
++---+------+---+------+-------+--------+
+|  5|Vikash| 31|300000|   null|nominee5|
++---+------+---+------+-------+--------+
+
+Where Clause
+
+df.where((col('salary')>150000) & (col('age')>18)).show()
+
+== Literals
+df.select('*',lit('Kumar').alias('last_name')).show()
+
+Column Addition
+df.withColumn('sir_name',lit('Singh')).show()
+
+== TypeCasting
+df.withColumn('id',col('id').cast('string'))\
+    .withColumn('salary',col('salary').cast('long'))\
+        .printSchema()
