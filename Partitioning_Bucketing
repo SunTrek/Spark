@@ -54,3 +54,21 @@ part_reader_df.write.format("csv")\
 ==
 dbutils.fs.ls("/FileStore/tables/part_by_address_gender/address=INDIA/")
 
+
+==== Bucketing
+part_reader_df.write.format("csv")\
+    .option("header","true") \
+        .option("mode","overwritten")\
+            .option("path","/FileStore/tables/bucket_by_id/")\
+                .bucketBy(3,"id")\
+                .saveAsTable("bucket_by_id")
+
+
+=== Repartition in Bucketing
+part_reader_df.repartition(5).write.format("csv")\
+    .option("header","true") \
+        .option("mode","overwritten")\
+            .option("path","/FileStore/tables/bucket_by_id_part/")\
+                .bucketBy(3,"id")\
+                .saveAsTable("bucket_by_id_part")
+
