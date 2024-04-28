@@ -1,0 +1,79 @@
+===
+
+-> https://community.cloud.databricks.com/?o=301283604803956#notebook/4016101252663381/command/473217294632451
+
+
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
+
+df = spark.read.format('csv')\
+    .option("header","true")\
+        .option("inferSchema","true") \
+            .option("mode","permissive") \
+                .load("/FileStore/tables/employeed.csv")
+
+
+df.show()
+
+===
+df.select('name','age').show()
++--------+---+
+|    name|age|
++--------+---+
+|  Manish| 26|
+|  Nikita| 23|
+|  Pritam| 22|
+|Prantosh| 17|
+|  Vikash| 31|
++--------+---+
+
+==
+df.select('name',col('age'),df['salary'],df.address).show()
+
++--------+---+------+------------+
+|    name|age|salary|     address|
++--------+---+------+------------+
+|  Manish| 26| 75000|       bihar|
+|  Nikita| 23|100000|uttarpradesh|
+|  Pritam| 22|150000|   Bangalore|
+|Prantosh| 17|200000|     Kolkata|
+|  Vikash| 31|300000|        null|
++--------+---+------+------------+
+
+=====
+df.select(expr('id as emp_id'),expr('name as employee_id'),expr('concat(name,address)')).show()
+
++------+-----------+---------------------+
+|emp_id|employee_id|concat(name, address)|
++------+-----------+---------------------+
+|     1|     Manish|          Manishbihar|
+|     2|     Nikita|   Nikitauttarpradesh|
+|     3|     Pritam|      PritamBangalore|
+|     4|   Prantosh|      PrantoshKolkata|
+|     5|     Vikash|                 null|
++------+-----------+---------------------+
+
+
+====
+df.select(expr('id+5 as new_id')).show()
++------+
+|new_id|
++------+
+|     6|
+|     7|
+|     8|
+|     9|
+|    10|
++------+
+
+
+
+
+
+
+
+
+
+
+
+
